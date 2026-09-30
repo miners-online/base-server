@@ -27,6 +27,15 @@ jobs:
       - name: Export .mrpack
         run: packwiz modrinth export
 
+      - name: Read pack version
+        run: |
+          VERSION=$(grep -m1 '^version' pack.toml | cut -d'"' -f2)
+          if [ -z "$VERSION" ]; then
+            echo "No version found in pack.toml" >&2
+            exit 1
+          fi
+          echo "VERSION=${VERSION}" >> "$GITHUB_ENV"
+
       - name: Zip packwiz pack
         run: |
           zip -r "base-server-packwiz-${VERSION}.zip" . \
